@@ -94,6 +94,9 @@ function build_lib_x264_with($arch) {
         }
         // build
         chdir($libx264_dir_full);
+        exec("make clean");
+        exec("rm -rf build/{$arch}");
+                
         $host = 'arm-apple-darwin';
         if ($arch == __ARCH_i386__) {
                 $host = 'i386-apple-darwin';
@@ -106,9 +109,7 @@ function build_lib_x264_with($arch) {
         if ($arch == __ARCH_i386__) {
                 $cmd .= "--disable-asm ";
         }
-        
-        exec("make clean");
-        exec("rm -rf build/{$arch}");
+
         $cmd = escapeshellcmd($cmd);
         exec_echo($cmd);
         exec("make && make install");
