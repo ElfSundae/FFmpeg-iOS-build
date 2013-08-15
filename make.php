@@ -255,7 +255,7 @@ function exec_echo($cmd) {
 
 function install_gas_preprocessor() {
         global $root_dir;
-        echo("[ Install  gas-preprocessor.pl ]\n")
+        echo("[ Install  gas-preprocessor.pl ]\n");
         exec_echo("sudo cp -f {$root_dir}/gas-preprocessor.pl /usr/local/bin");
         exec_echo("chmod +x /usr/local/bin/gas-preprocessor.pl");
 }
