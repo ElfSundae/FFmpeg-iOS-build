@@ -9,7 +9,29 @@ Build FFmpeg for iOS, supports armv7, armv7s and i386 (iOS Simulator) architectu
         $ cd FFmpeg-iOS-build
         $ php make.php
 
-Take a coffee break, the script will output libraries and header files in `FFmpeg-iOS-build/build`.
+Take a coffee break, the script will output libraries and header files in `FFmpeg-iOS-build/build`.        
+
+####Test:####
+
+  1. Create a new Xcode project, copy `FFmpeg-iOS-build/build` to `<project_root>/ffmpeg`.
+  2. Right click the project name in Xcode Navigator, select `Add Files to ...`, locate the `ffmpeg` then click `Add` button.
+          Do **NOT** select the "Copy items into destination group’s folder (if needed)" checkbox as the `ffmpeg` direcotry
+          has been already in the project directory.  
+          Aslo you can drag the `build` directory to the Xcode Navigator Pannel, then **SELECT** the "Copy item into..." checkbox.
+  3. Add frameworks from "Build Phases":   
+          
+        libiconv.2.4.0.dylib, libz.dylib, libbz2.1.0.dylib.
+  4. In the "Build Settings", edit the "Header Search Paths", fill into the header paths, e.g.  
+            
+          $(SRCROOT)/ffmpeg/libx264  
+          $(SRCROOT)/ffmpeg/ffmpeg-2.0.1  
+  5. In `AppDelegate.m`, in the `-application:didFinishLaunchingWithOptions:` method, you can code as followings:  
+  
+          [self.window makeKeyAndVisible];
+          av_register_all();
+          printf("%s\n", avformat_configuration());
+          return YES;      
+  6. Build & Run.                        
 
 ###Customization
 Edit `make.php` :
@@ -31,7 +53,9 @@ Edit `make.php` :
 
 ###TODO
 * Support more [ffmpeg external libraries](http://ffmpeg.org/general.html#External-libraries).
-* Publish an iOS demo project.
+* <del>Publish an iOS demo project.</del> See "[Test](#test)" section above.
 
 ###Refrence
 * [gas-preprocessor](https://github.com/yuvi/gas-preprocessor)
+* [Using libavformat and libavcodec by Martin Böhme](http://www.inb.uni-luebeck.de/~boehme/using_libavcodec.html), a good overview of the FFmpeg APIs, though quite out dated.
+* [FFmpeg Documentation](http://ffmpeg.org/doxygen/trunk/index.html)
