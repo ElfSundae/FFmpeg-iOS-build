@@ -1,2 +1,5 @@
 .DS_Store
 *.swp
+build/
+ffmpeg*/
+ffmpeg*.tar.bz2
