@@ -1,3 +1,6 @@
 [submodule "demo/ESMediaPlayerDemo"]
 	path = demo/ESMediaPlayerDemo
-	url = https://github.com/ElfSundae/ESMediaPlayerDemo.git
+url=git@github.com:ElfSundae/ESMediaPlayerDemo.git
+[submodule "demo/FFmpegAudioTest"]
+	path = demo/FFmpegAudioTest
+url=git@github.com:ElfSundae/FFmpegAudioTest.git

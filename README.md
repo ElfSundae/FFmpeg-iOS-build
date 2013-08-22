@@ -7,6 +7,7 @@ Build FFmpeg for iOS, supports armv7, armv7s and i386 (iOS Simulator) architectu
 ###Build
         $ git clone https://github.com/ElfSundae/FFmpeg-iOS-build
         $ cd FFmpeg-iOS-build
+        $ git submodule init
         $ git submodule update
         $ php make.php
 
@@ -38,7 +39,7 @@ Take a coffee break, the script will output libraries and header files in `FFmpe
 
 ###Demo
 * [ESMediaPlayerDemo](https://github.com/ElfSundae/ESMediaPlayerDemo)         
-* [FFmpegAudioTest](https://github.com/ElfSundae/objc-FFmpegAudioTest)
+* [FFmpegAudioTest](https://github.com/ElfSundae/FFmpegAudioTest)
 
 ###Customization
 Edit `make.php` :
