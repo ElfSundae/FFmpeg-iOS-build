@@ -11,7 +11,7 @@ Build FFmpeg for iOS, supports armv7, armv7s and i386 (iOS Simulator) architectu
 
 Take a coffee break, the script will output libraries and header files in `FFmpeg-iOS-build/build`.        
 
-####Test:####
+####Test:
 
   1. Create a new Xcode project, copy `FFmpeg-iOS-build/build` to `<project_root>/ffmpeg`.
   2. Right click the project name in Xcode Navigator, select `Add Files to ...`, locate the `ffmpeg` then click `Add` button.
@@ -49,16 +49,26 @@ Edit `make.php` :
         //
         // Now supports external libraries: x264
         //
-        $ffmpeg_configure_options = array(
-              'enable-libx264',  
+        $ffmpeg_configure_options = array( 
+              'disable-programs',
+              'disable-doc',
+              'disable-debug', 
+              /* external libraries */
+              'enable-libx264',
         );
+
 
 ###TODO
 * Support more [ffmpeg external libraries](http://ffmpeg.org/general.html#External-libraries).
-* <del>Publish an iOS demo project.</del> See "[Test](#test)" section above.
+* <del>Publish an iOS demo project.</del>  
+         <del>See "[Test](#test)" section above.</del>
+         
+###Demo
+* [ESMediaPlayerDemo](https://github.com/ElfSundae/ESMediaPlayerDemo)         
 
 ###Refrences
 * [gas-preprocessor](https://github.com/yuvi/gas-preprocessor)
 * [How to Prepare Your Mac for iOS Development with FFmpeg Libraries](http://www.tangentsoftworks.com/2012/11/12/how-to-prepare-your-mac-for-ios-development-with-ffmpeg-libraries)
 * [Using libavformat and libavcodec by Martin Böhme](http://www.inb.uni-luebeck.de/~boehme/using_libavcodec.html), a good overview of the FFmpeg APIs, though quite out dated.
 * [FFmpeg Documentation](http://ffmpeg.org/doxygen/trunk/index.html)
+* [iFrameExtractor](https://github.com/lajos/iFrameExtractor)

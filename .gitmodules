@@ -1,0 +1,3 @@
+[submodule "ESMediaPlayerDemo"]
+	path = ESMediaPlayerDemo
+	url = https://github.com/ElfSundae/ESMediaPlayerDemo.git
