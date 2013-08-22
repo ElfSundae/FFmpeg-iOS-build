@@ -7,6 +7,7 @@ Build FFmpeg for iOS, supports armv7, armv7s and i386 (iOS Simulator) architectu
 ###Build
         $ git clone https://github.com/ElfSundae/FFmpeg-iOS-build
         $ cd FFmpeg-iOS-build
+        $ git submodule update
         $ php make.php
 
 Take a coffee break, the script will output libraries and header files in `FFmpeg-iOS-build/build`.        
@@ -34,6 +35,10 @@ Take a coffee break, the script will output libraries and header files in `FFmpe
           printf("%s\n", avformat_configuration());
           return YES;      
   6. Build & Run.                        
+
+###Demo
+* [ESMediaPlayerDemo](https://github.com/ElfSundae/ESMediaPlayerDemo)         
+* [FFmpegAudioTest](https://github.com/ElfSundae/objc-FFmpegAudioTest)
 
 ###Customization
 Edit `make.php` :
@@ -63,12 +68,10 @@ Edit `make.php` :
 * <del>Publish an iOS demo project.</del>  
          <del>See "[Test](#test)" section above.</del>
          
-###Demo
-* [ESMediaPlayerDemo](https://github.com/ElfSundae/ESMediaPlayerDemo)         
-
-###Refrences
+###References
 * [gas-preprocessor](https://github.com/yuvi/gas-preprocessor)
 * [How to Prepare Your Mac for iOS Development with FFmpeg Libraries](http://www.tangentsoftworks.com/2012/11/12/how-to-prepare-your-mac-for-ios-development-with-ffmpeg-libraries)
 * [Using libavformat and libavcodec by Martin Böhme](http://www.inb.uni-luebeck.de/~boehme/using_libavcodec.html), a good overview of the FFmpeg APIs, though quite out dated.
 * [FFmpeg Documentation](http://ffmpeg.org/doxygen/trunk/index.html)
 * [iFrameExtractor](https://github.com/lajos/iFrameExtractor)
+* [objc-FFmpegAudioTest](https://github.com/pontago/objc-FFmpegAudioTest)
