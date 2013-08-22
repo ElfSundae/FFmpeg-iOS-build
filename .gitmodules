@@ -1,3 +1,6 @@
-[submodule "ESMediaPlayerDemo"]
-	path = ESMediaPlayerDemo
+[submodule "demo/FFmpegAudioTest"]
+	path = demo/FFmpegAudioTest
+	url = https://github.com/ElfSundae/objc-FFmpegAudioTest.git
+[submodule "demo/ESMediaPlayerDemo"]
+	path = demo/ESMediaPlayerDemo
 	url = https://github.com/ElfSundae/ESMediaPlayerDemo.git
