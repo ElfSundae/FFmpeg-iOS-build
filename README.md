@@ -57,7 +57,8 @@ Edit `make.php` :
 * Support more [ffmpeg external libraries](http://ffmpeg.org/general.html#External-libraries).
 * <del>Publish an iOS demo project.</del> See "[Test](#test)" section above.
 
-###Refrence
+###Refrences
 * [gas-preprocessor](https://github.com/yuvi/gas-preprocessor)
+* [How to Prepare Your Mac for iOS Development with FFmpeg Libraries](http://www.tangentsoftworks.com/2012/11/12/how-to-prepare-your-mac-for-ios-development-with-ffmpeg-libraries)
 * [Using libavformat and libavcodec by Martin Böhme](http://www.inb.uni-luebeck.de/~boehme/using_libavcodec.html), a good overview of the FFmpeg APIs, though quite out dated.
 * [FFmpeg Documentation](http://ffmpeg.org/doxygen/trunk/index.html)

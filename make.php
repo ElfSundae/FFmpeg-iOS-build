@@ -17,8 +17,12 @@ $ios_sdk_version = '6.1';
 //
 // Now supports external libraries: x264
 //
-$ffmpeg_configure_options = array(
-      'enable-libx264',  
+$ffmpeg_configure_options = array( 
+      'disable-programs',
+      'disable-doc',
+      'disable-debug', 
+      /* external libraries */
+      'enable-libx264',
 );
 
 $root_dir = dirname(__FILE__);
@@ -49,9 +53,6 @@ if (!file_exists($external_lib_dir_full)) {
 install_gas_preprocessor();
 
 download_unpack_ffmpeg();
-if (is_ffmpeg_configure_exists('enable-libx264')) {
-        build_lib_x264();        
-}
 build_ffmpeg();
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -138,6 +139,10 @@ function download_unpack_ffmpeg() {
 }
 
 function build_ffmpeg() {
+        if (is_ffmpeg_configure_exists('enable-libx264')) {
+                build_lib_x264();        
+        }
+        
         build_ffmpeg_with(__ARCH_i386__);
         build_ffmpeg_with(__ARCH_ARMv7__);
         build_ffmpeg_with(__ARCH_ARMv7s__);
@@ -192,13 +197,7 @@ function build_ffmpeg_with($arch) {
         $cmd .= "--as='gas-preprocessor.pl " . xcode_developer_gcc($arch) . "' ";
         $cmd .= "--sysroot='" . xcode_developer_SDK_root($arch) . "' ";
         $cmd .= "--extra-ldflags=-L'" . xcode_developer_SDK_lib($arch) . "' ";
-        $cmd .= "--enable-pic --enable-cross-compile --enable-gpl --enable-nonfree ";
-        $cmd .= "--disable-programs --disable-doc --disable-debug ";
-        if (is_ffmpeg_configure_exists('enable-libx264')) {
-                $cmd .= "--extra-ldflags=-L'{$external_lib_dir_full}/libx264/build/{$arch}/lib -arch {$arch}' ";
-                $cmd .= "--extra-cflags=-I'{$external_lib_dir_full}/libx264/build/{$arch}/include -arch {$arch}' ";
-                $cmd .= "--enable-libx264 ";
-        }
+        $cmd .= "--enable-pic --enable-cross-compile --enable-gpl --enable-nonfree --enable-version3 ";
         $cmd .= "--target-os=darwin ";
         if ($arch == __ARCH_i386__) {
                 $cmd .= "--arch=i386 ";
@@ -211,6 +210,14 @@ function build_ffmpeg_with($arch) {
                 } else {
                        $cmd .= "--cpu=cortex-a8 ";
                 }
+        }
+        foreach ($ffmpeg_configure_options as $config) {
+                $cmd .= "--{$config} ";
+        }
+        
+        if (is_ffmpeg_configure_exists('enable-libx264')) {
+                $cmd .= "--extra-ldflags=-L'{$external_lib_dir_full}/libx264/build/{$arch}/lib -arch {$arch}' ";
+                $cmd .= "--extra-cflags=-I'{$external_lib_dir_full}/libx264/build/{$arch}/include -arch {$arch}' ";
         }
         
         exec_echo($cmd);
