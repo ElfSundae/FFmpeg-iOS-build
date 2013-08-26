@@ -22,7 +22,7 @@ Take a coffee break, the script will output libraries and header files in `FFmpe
           Aslo you can drag the `build` directory to the Xcode Navigator Pannel, then **SELECT** the "Copy item into..." checkbox.
   3. Add frameworks from "Build Phases":   
           
-        libiconv.2.4.0.dylib // for x264
+        libiconv.2.4.0.dylib
         libz.dylib
         libbz2.1.0.dylib
   4. In the "Build Settings", edit the "Header Search Paths", fill into the header paths, e.g.  
