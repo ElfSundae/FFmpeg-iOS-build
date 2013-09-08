@@ -7,8 +7,7 @@ Build FFmpeg for iOS, supports armv7, armv7s and i386 (iOS Simulator) architectu
 ###Build
         $ git clone https://github.com/ElfSundae/FFmpeg-iOS-build
         $ cd FFmpeg-iOS-build
-        $ git submodule init
-        $ git submodule update
+        $ git submodule update --init
         $ php make.php
 
 Take a coffee break, the script will output libraries and header files in `FFmpeg-iOS-build/build`.        
@@ -63,6 +62,8 @@ Edit `make.php` :
               'enable-libx264',
         );
 
+###Compiling Issues
+https://github.com/ElfSundae/FFmpeg-iOS-build/wiki/Compiling-Issues
 
 ###TODO
 * Support more [ffmpeg external libraries](http://ffmpeg.org/general.html#External-libraries).

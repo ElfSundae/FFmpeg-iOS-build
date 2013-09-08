@@ -15,14 +15,25 @@ $ios_sdk_version = '6.1';
 // 
 // See `./configure -h` for all component options and external libraries support.
 //
-// Now supports external libraries: x264
 //
+/** Only for device compile */
 $ffmpeg_configure_options = array( 
       'disable-programs',
       'disable-doc',
-      'disable-debug', 
-      /* external libraries */
-      'enable-libx264',
+      'disable-debug',
+      'enable-pic',
+      "extra-cflags='-mfpu=neon -mfloat-abi=softfp -mvectorize-with-neon-quad'",
+      'enable-neon',
+      'enable-optimizations',
+      'disable-armv5te',
+      'disable-armv6',
+      'disable-armv6t2',
+);
+
+// Now supports external libraries: x264
+$ffmpeg_external_libs = array(
+        'enable-libx264',
+        //'disable-bzlib',
 );
 
 $root_dir = dirname(__FILE__);
@@ -36,7 +47,8 @@ define('__ARCH_ARMv7s__', 'armv7s');
 define('__ARCH_i386__', 'i386');
 
 global $ffmpeg_version, $root_dir, $ffmpeg_dir, $ffmpeg_dir_full,
-$ios_sdk_version, $ffmpeg_configure_options, $build_dir_full, $external_lib_dir_full;
+$ios_sdk_version, $ffmpeg_configure_options, $ffmpeg_external_libs, 
+$build_dir_full, $external_lib_dir_full;
         
 ///////////////////////////////////////////////////////////////////////////////
 //      Main
@@ -95,25 +107,25 @@ function build_lib_x264_with($arch) {
         }
         // build
         chdir($libx264_dir_full);
-        exec("make clean");
+        exec_echo("make clean");
         exec("rm -rf build/{$arch}");
                 
         $host = 'arm-apple-darwin';
         if ($arch == __ARCH_i386__) {
                 $host = 'i386-apple-darwin';
         }
-        $cmd = 'CC=' . xcode_developer_gcc($arch) . ' ';
-        $cmd .= "./configure --host={$host} --prefix=build/{$arch} --extra-cflags='-arch {$arch}' ";
+        $cmd = './configure CC=' . xcode_developer_gcc($arch) . ' '; 
+        $cmd .= "--host={$host} --prefix=build/{$arch} --extra-cflags='-arch {$arch}' ";
         $cmd .= "--sysroot=" . xcode_developer_SDK_root($arch) . ' ';
         $cmd .= "--extra-ldflags='-L" . xcode_developer_SDK_lib($arch) . " -arch {$arch}' ";
-        $cmd .= "--enable-pic --disable-shared --enable-static ";
+        $cmd .= "--enable-pic --enable-static ";
         if ($arch == __ARCH_i386__) {
                 $cmd .= "--disable-asm ";
         }
 
         $cmd = escapeshellcmd($cmd);
         exec_echo($cmd);
-        exec("make && make install");
+        exec_echo("make && make install");
         
         echo "Done.\n";
 }
@@ -142,7 +154,6 @@ function build_ffmpeg() {
         if (is_ffmpeg_configure_exists('enable-libx264')) {
                 build_lib_x264();        
         }
-        
         build_ffmpeg_with(__ARCH_i386__);
         build_ffmpeg_with(__ARCH_ARMv7__);
         build_ffmpeg_with(__ARCH_ARMv7s__);
@@ -184,45 +195,52 @@ function build_ffmpeg() {
 
 function build_ffmpeg_with($arch) {
         global $root_dir, $ffmpeg_dir, $ffmpeg_dir_full, $build_dir_full,
-                $ffmpeg_configure_options, $external_lib_dir_full;
+                $ffmpeg_configure_options, $ffmpeg_external_libs, $external_lib_dir_full;
                 
         echo "[ Building FFmpeg $arch ... ]\n";
         chdir($ffmpeg_dir_full);
-        exec("rm -rf build/{$arch}");
-        exec("make clean");
-        
+        exec_echo("rm -rf build/{$arch}");
+        exec_echo("make clean");
         
         $cmd = "./configure --cc='". xcode_developer_gcc($arch) ."' ";
         $cmd .= "--prefix=build/{$arch} ";
         $cmd .= "--as='gas-preprocessor.pl " . xcode_developer_gcc($arch) . "' ";
         $cmd .= "--sysroot='" . xcode_developer_SDK_root($arch) . "' ";
         $cmd .= "--extra-ldflags=-L'" . xcode_developer_SDK_lib($arch) . "' ";
-        $cmd .= "--enable-pic --enable-cross-compile --enable-gpl --enable-nonfree --enable-version3 ";
+        $cmd .= "--enable-cross-compile --enable-gpl --enable-nonfree --enable-version3 ";
         $cmd .= "--target-os=darwin ";
+        $cmd .= "--extra-ldflags='-arch {$arch}' ";
+        $cmd .= "--extra-cflags='-arch {$arch}' ";
+        
         if ($arch == __ARCH_i386__) {
                 $cmd .= "--arch=i386 ";
                 $cmd .= "--cpu=i386 ";
                 $cmd .= "--disable-asm ";
+                $cmd .= "--disable-mmx ";
+                $cmd .= "--disable-programs --disable-doc --disable-debug ";
         } else {
                 $cmd .= "--arch=arm ";
+                foreach ($ffmpeg_configure_options as $config) {
+                        $cmd .= "--{$config} ";
+                }
                 if ($arch == __ARCH_ARMv7s__) {
                       $cmd .= "--cpu=cortex-a9 ";  
                 } else {
                        $cmd .= "--cpu=cortex-a8 ";
                 }
         }
-        foreach ($ffmpeg_configure_options as $config) {
-                $cmd .= "--{$config} ";
+        foreach ($ffmpeg_external_libs as $lib) {
+                $cmd .= "--{$lib} ";
         }
         
         if (is_ffmpeg_configure_exists('enable-libx264')) {
-                $cmd .= "--extra-ldflags=-L'{$external_lib_dir_full}/libx264/build/{$arch}/lib -arch {$arch}' ";
-                $cmd .= "--extra-cflags=-I'{$external_lib_dir_full}/libx264/build/{$arch}/include -arch {$arch}' ";
+                $cmd .= "--extra-ldflags=-L'{$external_lib_dir_full}/libx264/build/{$arch}/lib' ";
+                $cmd .= "--extra-cflags=-I'{$external_lib_dir_full}/libx264/build/{$arch}/include' ";
         }
         
         exec_echo($cmd);
-        exec("make && make install");
-        echo "Done.\n";
+        exec_echo("make && make install");
+        echo "ffmpeg $arch Done.\n";
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -268,8 +286,9 @@ function install_gas_preprocessor() {
 }
 
 function is_ffmpeg_configure_exists($config) {
-        global $ffmpeg_configure_options;
-        return in_array($config, $ffmpeg_configure_options);
+        global $ffmpeg_configure_options, $ffmpeg_external_libs;
+        return (in_array($config, $ffmpeg_configure_options) ||
+                in_array($config, $ffmpeg_external_libs));
 }
 
 $now_date_end = time();
