@@ -16,7 +16,7 @@ $ios_sdk_version = '6.1';
 // See `./configure -h` for all component options and external libraries support.
 //
 //
-/** Only for device compile */
+/** Only for device compiling */
 $ffmpeg_configure_options = array( 
       'disable-programs',
       'disable-doc',
@@ -114,8 +114,8 @@ function build_lib_x264_with($arch) {
         if ($arch == __ARCH_i386__) {
                 $host = 'i386-apple-darwin';
         }
-        $cmd = './configure CC=' . xcode_developer_gcc($arch) . ' '; 
-        $cmd .= "--host={$host} --prefix=build/{$arch} --extra-cflags='-arch {$arch}' ";
+        $cmd = 'CC=' . xcode_developer_gcc($arch) . ' '; 
+        $cmd .= "./configure --host={$host} --prefix=build/{$arch} --extra-cflags='-arch {$arch}' ";
         $cmd .= "--sysroot=" . xcode_developer_SDK_root($arch) . ' ';
         $cmd .= "--extra-ldflags='-L" . xcode_developer_SDK_lib($arch) . " -arch {$arch}' ";
         $cmd .= "--enable-pic --enable-static ";
@@ -275,7 +275,7 @@ function xcode_developer_SDK_lib($arch) {
 
 function exec_echo($cmd) {
         echo $cmd . PHP_EOL;
-        exec($cmd);
+        exec($cmd . ' 1>&2');
 }
 
 function install_gas_preprocessor() {
