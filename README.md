@@ -1,3 +1,9 @@
+#Deprecated Repo
+
+​**​:warning:​ This script has been deprecated. You may try https://github.com/kewlbear/FFmpeg-iOS-build-script instead.**
+
+---
+
 Build FFmpeg for iOS, supports armv7, armv7s and i386 (iOS Simulator) architectures.
 
 ###Requirement
